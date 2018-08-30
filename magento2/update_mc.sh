@@ -22,9 +22,7 @@ tar -cvzf magento2_stage-web-backup-$(date +%Y%m%d).tgz $webroot
 mysqldump --login-path=magento2_stage magento2_stage > magento2_stage-database-backup-$(date +%Y%m%d).sql
 
 # we need to change our working directory to the magento 2 web root or $webroot
-echo "
-Switching the working directory to $webroot
-"
+echo "Switching the working directory to $webroot"
 cd $webroot
 
 # now we need to instruct composer to update either (a) all packages associated within the composer.json OR (b) just the mailchimp/mc-magento2 package
