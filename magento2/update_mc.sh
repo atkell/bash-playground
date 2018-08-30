@@ -30,13 +30,13 @@ cd $webroot
 
 # now we need to instruct composer to update either (a) all packages associated within the composer.json OR (b) just the mailchimp/mc-magento2 package
 echo "In order to use composer, we must first change ownership to our system user. This will require sudo:"
-sudo chown -R $whoami:$whoami /var/www/magento2 # will using sudo here prompt us for a password?
+sudo chown -R $whoami:$whoami $webroot # will using sudo here prompt us for a password?
 
 echo "Now we may use composer to update the specific package mailchimp/mc-magento2:"
 composer update mailchimp/mc-magento2
 
 echo "And now we should assign ownership of these files back to Apache user (www-data). This will require sudo:"
-sudo chown -R $webuser:$webuser /var/www/magento2
+sudo chown -R $webuser:$webuser $webroot
 
 echo "And finally, we may run a few Magento CLI commands:"
 php bin/magento setup:upgrade
