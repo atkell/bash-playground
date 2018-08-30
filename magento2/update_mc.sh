@@ -14,12 +14,13 @@ This script will attempt to perform 3 tasks:
 echo "Let's get started by asking for information about the Magento 2 installation\n"
 # prompt for magento2 web root
 read -p "Magento 2 web root (include trailing slash): " webroot
+# these arent necessary now that we're using a mysql_config_editor file
 # prompt for magento 2 database name
-read -p "Magento 2 database name: " dbname
-# prompt for magento 2 database user
-read -p "Magento 2 database user: " dbuser
-# prompt for magento 2 database password but don't display it when we echo back
-read -sp "Magento 2 database password: " dbpasswd
+# read -p "Magento 2 database name: " dbname
+# # prompt for magento 2 database user
+# read -p "Magento 2 database user: " dbuser
+# # prompt for magento 2 database password but don't display it when we echo back
+# read -sp "Magento 2 database password: " dbpasswd
 
 # let's test to verify our variable assignment
 # echo $webroot 
@@ -29,9 +30,9 @@ read -sp "Magento 2 database password: " dbpasswd
 
 # create a backup of the application files, serialize it and store it in a specific directory
 # tar command is tar -czf name_of_archive.tar.gz /location/to/archive/
-tar -cvzf backup-$(date +%Y%m%d).tgz $webroot 
+tar -cvzf magento2-web-backup-$(date +%Y%m%d).tgz $webroot 
 # create a backup of the application database(s), serialize it and store it in the same directory as the files backup
-mysqldump -u $dbuser -p $dbpasswd $dbname > backup-$(date +%Y%m%d).sql
+mysqldump --login-path=magento2_stage $dbname > magento2-database-backup-$(date +%Y%m%d).sql
 
 
 # tar cvzf websitebackup.tgz magento2; 
