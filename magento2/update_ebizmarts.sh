@@ -15,6 +15,7 @@ read -p "Magento 2 web root (include trailing slash): " webroot
 tar -cvzf magento2_stage-web-backup-$(date +%Y%m%d).tgz $webroot
 
 # create a backup of the application database(s), serialize it and store it in the same directory as the files backup
+# leverage mysql's mysql_config_editor here to simply the mysqldump command some (and be somewhat more secure)
 mysqldump --login-path=magento2_stage magento2_stage > magento2_stage-database-backup-$(date +%Y%m%d).sql
 
 # we need to change our working directory to the magento 2 web root or $webroot
