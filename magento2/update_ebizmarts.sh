@@ -5,8 +5,8 @@
 # [2] Use Composer to update the contents of the eBizMarts mc-magento2 package
 # [3] Use the Magento 2 CLI to run the setup:upgrade, setup:di:compile and cache:flush commands
 
-whoami = $(whoami) # composer is installed for our system user so we'll need to store who we are for later
-webuser = www-data # we'll set the Apache user here as a variable for later, too
+whoami = "$(whoami)" # composer is installed for our system user so we'll need to store who we are for later
+webuser = "www-data" # we'll set the Apache user here as a variable for later, too
 
 # prompt for magento2 web root
 read -p "Magento 2 web root (include trailing slash): " webroot
