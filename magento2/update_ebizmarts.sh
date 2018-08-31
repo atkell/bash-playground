@@ -1,12 +1,15 @@
 #!/bin/bash
+# To-Do List:
+# -- Add a conditional to first check and see if there is an update available via composer, if there is, then proceed with the script, 
+#    if there is not then don't execute the remainder of the script
 
 # This script will attempt to perform 3 tasks:
 # [1] Create a backup of the Magento 2 web root and database
 # [2] Use Composer to update the contents of the eBizMarts mc-magento2 package
 # [3] Use the Magento 2 CLI to run the setup:upgrade, setup:di:compile and cache:flush commands
 
-whoami = "$(whoami)" # composer is installed for our system user so we'll need to store who we are for later
-webuser = "www-data" # we'll set the Apache user here as a variable for later, too
+whoami="$(whoami)" # composer is installed for our system user so we'll need to store who we are for later
+webuser="www-data" # we'll set the Apache user here as a variable for later, too
 
 # prompt for magento2 web root
 read -p "Magento 2 web root (include trailing slash): " webroot
@@ -23,7 +26,7 @@ cd $webroot
 
 # in order to use composer, we must first change ownership to our system user. This will require sudo."
 sudo chown -R $whoami:$whoami $webroot # doing this will prompt us for a password
-composer update mailchimp/mc-magento2 # now we may use composer to update the specific package mailchimp/mc-magento2
+composer -vvv update mailchimp/mc-magento2 # now we may use composer to update the specific package mailchimp/mc-magento2, added -vvv option to enable debug output
 
 #  aAnd finally, we may run a few Magento CLI commands
 php bin/magento setup:upgrade
