@@ -27,13 +27,13 @@ tar -cvzf magento1_stage-web-backup-$(date +%Y%m%d).tgz $webroot
 mysqldump --login-path=magento1_stage magento_stage > magento1_stage-database-backup-$(date +%Y%m%d).sql 
 
 # we need to change our working directory to the magento 1 web root 
-cd $webroot
+#cd $webroot # this probably isnt necessary anymore
 
 # we may need to elevate and run some commands 
-#sudo chown -R $whoami:$whoami $webroot # is this necessary?
+sudo chown -R $whoami:$whoami $webroot
 
-# change working directory to mc-magento
-cd /mc-magento 
+# change working directory to mc-magento sub-direction within $webroot
+cd $webroot/mc-magento 
 
 # use git to pull down latest changes from upstream repository
 git pull origin develop
