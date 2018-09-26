@@ -26,7 +26,7 @@ tar -cvzf magento1_stage-web-backup-$(date +%Y%m%d).tgz $webroot
 # this will prompt you to input a password and then save it all into the .mylogin.cnf file within the user's home directory
 mysqldump --login-path=magento1_stage magento_stage > magento1_stage-database-backup-$(date +%Y%m%d).sql 
 
-# we need to change our working directory to the magento 1 web root 
+# we need to change our working directory to the magento 1 web root
 #cd $webroot # this probably isnt necessary anymore
 
 # we may need to elevate and run some commands 
@@ -39,7 +39,7 @@ cd $webroot/mc-magento
 git pull origin develop
 
  # copy the contents of the mc-magento directory back into the magento 1 web root
-cp -R . $webroot
+rsync -avz . $webroot
 
 # flush the magento 1 cache. we could also simply do rm -rf var/cache here instead but this seems more appropriate
 php -r 'require "app/Mage.php"; Mage::app()->getCacheInstance()->flush();' 
