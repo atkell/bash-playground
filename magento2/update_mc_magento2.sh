@@ -26,7 +26,12 @@ cd $webroot
 
 # in order to use composer, we must first change ownership to our system user. This will require sudo."
 sudo chown -R $whoami:$whoami $webroot # doing this will prompt us for a password
-composer -vvv update mailchimp/mc-magento2 # now we may use composer to update the specific package mailchimp/mc-magento2, added -vvv option to enable debug output
+
+# this is appropriate for production
+# composer -vvv update mailchimp/mc-magento2 # now we may use composer to update the specific package mailchimp/mc-magento2, added -vvv option to enable debug output
+
+# this is appropriate for stage
+composer -vvv require mailchimp/mc-magento2:dev-develop
 
 #  aAnd finally, we may run a few Magento CLI commands
 php bin/magento setup:upgrade
