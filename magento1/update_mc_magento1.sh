@@ -1,12 +1,10 @@
 #!/bin/bash
-# To-Do List:
-# -- Add a conditional to first check and see if there is an update available via git, if there is, then proceed with the script, 
-#    if there is not then don't execute the remainder of the script
 
 # This script will attempt to perform 3 tasks:
 # [1] Create a backup of the Magento 1 web root and database
 # [2] Use git to update the contents of the mc-magento directory and then copy said contents to the Magento 1 web root
-# [3] Use the command line to manually flush the Magento 1 cache
+# [3] Ensure that the files are have correct ownership
+# [4] Use the command line to manually flush the Magento 1 cache
 
 # get the user who is currently authenticated in shell session
 whoami="$(whoami)"
