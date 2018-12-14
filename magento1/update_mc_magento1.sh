@@ -16,6 +16,7 @@ webuser="www-data"
 read -p "Magento 1 web root (include trailing slash): " webroot
 
 # create a backup of the application files, serialize it and store it in a specific directory
+# this may require sudo given the ownership mismatch between whoami and www-data
 tar -cvzf magento1_stage-web-backup-$(date +%Y%m%d).tgz $webroot 
 
 # leverage mysql's mysql_config_editor here to simplify the mysqldump command some (and be somewhat more secure by not exposing the password in plain-text), 
@@ -28,7 +29,7 @@ mysqldump --login-path=magento1_stage magento_stage > magento1_stage-database-ba
 #cd $webroot # this probably isnt necessary anymore
 
 # we may need to elevate and run some commands 
-sudo chown -R $whoami:$whoami $webroot
+chown -R $whoami:$whoami $webroot
 
 # change working directory to mc-magento sub-direction within $webroot
 cd $webroot/mc-magento 
@@ -40,9 +41,12 @@ git pull origin develop
 rsync -avz . $webroot
 
 # flush the magento 1 cache. we could also simply do rm -rf var/cache here instead but this seems more appropriate
-php -r 'require "app/Mage.php"; Mage::app()->getCacheInstance()->flush();' 
+# php -r 'require $webroot/app/Mage.php; Mage::app()->getCacheInstance()->flush();' 
+rm -r $webroot/var/cache
 
 sudo chown -R $webuser:$webuser $webroot # and now we should assign ownership of these files back to Apache user (www-data). This will require sudo.
+
+echo "\nUpdate completed. Latest `git log -1`. "
 
 # perfecto!
 
