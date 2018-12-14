@@ -35,7 +35,9 @@ chown -R $whoami:$whoami $webroot
 cd $webroot/mc-magento 
 
 # use git to pull down latest changes from upstream repository
-git pull origin develop
+git stash --all             # stash any local changes
+git fetch origin develop    # fetch
+git pull origin develop     # pull
 
  # copy the contents of the mc-magento directory back into the magento 1 web root
 rsync -avz . $webroot
@@ -48,5 +50,5 @@ sudo chown -R $webuser:$webuser $webroot # and now we should assign ownership of
 
 echo "\nUpdate completed. Latest `git log -1`. "
 
-# perfecto!
+# fin
 
