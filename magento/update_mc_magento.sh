@@ -18,20 +18,20 @@ main () {
   hello_function
 }
 
-# D R Y
 upgrade_function () {
   printf "\n\nYou selected ${COL_YELLOW}Magento 2 v2.${whichMenuOption}${COL_NC}. Shall we proceed with the update?\n"
   printf "Type ${COL_GREEN}Y${COL_NC} for ${COL_GREEN}Yes${COL_NC}, ${COL_RED}N${COL_NC} for ${COL_RED}No${COL_NC}. "
   read -n1 -p '> ' confirmation
   case $confirmation in
     y|Y)
-      printf "\n\n${COL_CYAN}(Step 1)${COL_NC} Create backups of MySQL database and contents of ${whichMagentoDirectory}\n\n"
-      tar -cvzf ${whichMagento}-web-backup-$(date +%Y%m%d).tgz ${whichMagentoDirectory}
-      mysqldump --login-path=$whichMagento $whichMagento > $whichMagento-database-backup-$(date +%Y%m%d).sql
-
-      printf "\n\n${COL_CYAN}(Step 2)${COL_NC} Set appropriate ownership for contents of ${whichMagentoDirectory}\n"
+      cd ~/backups
+      printf "\n\n${COL_CYAN}(Step 1)${COL_NC} Set appropriate ownership for contents of ${whichMagentoDirectory}\n"
       printf "${COL_MAGE}(Hint)${COL_NC} We're about to ask you for a password to do this.\n\n"
       sudo chown -R $whoami:www-data $whichMagentoDirectory
+
+      printf "\n\n${COL_CYAN}(Step 2)${COL_NC} Create backups of MySQL database and contents of ${whichMagentoDirectory}\n\n"
+      tar -cvzf ${whichMagento}-web-backup-$(date +%Y%m%d).tgz ${whichMagentoDirectory}
+      mysqldump --login-path=$whichMagento $whichMagento > $whichMagento-database-backup-$(date +%Y%m%d).sql
 
       printf "\n\n${COL_CYAN}(Step 3)${COL_NC} Instruct Composer to grab the latest changes to the branch ${whichComposerPackage}.\n\n"
       usr/bin/php7.1 /usr/local/bin/composer require mailchimp/mc-magento2:$whichComposerPackage
@@ -64,13 +64,14 @@ upgrade_function2 () {
   read -n1 -p '> ' confirmation
   case $confirmation in
     y|Y)
-      printf "\n\n${COL_CYAN}(Step 1)${COL_NC} Create backups of MySQL database and contents of ${whichMagentoDirectory}.\n\n"
+      cd ~/backups
+      printf "\n\n${COL_CYAN}(Step 1)${COL_NC} Set appropriate ownership for contents of ${whichMagentoDirectory}\n"
+      printf "${COL_MAGE}(Hint)${COL_NC} We're about to ask you for a password to do this.\n\n"
+      sudo chown -R $whoami:www-data $whichMagentoDirectory
+
+      printf "\n\n${COL_CYAN}(Step 2)${COL_NC} Create backups of MySQL database and contents of ${whichMagentoDirectory}.\n\n"
       tar -cvzf $whichMagento-web-backup-$(date +%Y%m%d).tgz $whichMagentoDirectory
       mysqldump --login-path=$whichMagento $whichMagento > $whichMagento-database-backup-$(date +%Y%m%d).sql
-
-      printf "\n\n${COL_CYAN}(Step 2)${COL_NC} Set appropriate ownership for contents of ${whichMagentoDirectory}, then change our working directory.
-      ${COL_MAGE}(Hint)${COL_NC} We're about to ask you for a password to do this.\n\n"
-      sudo chown -R $whoami:www-data $whichMagentoDirectory
       cd $whichMagentoDirectory/mc-magento
 
       printf "\n\n${COL_CYAN}(Step 3)${COL_NC} Instruct git to stash local changes, then grab latest changes from branch 'develop'.\n\n"
