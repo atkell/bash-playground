@@ -89,7 +89,7 @@ upgrade_function2 () {
       rsync -avz . $whichMagentoDirectory
 
       printf "\n\n${COL_CYAN}(Step 5)${COL_NC} Flush the cache.\n\n"
-      m -r $whichMagentoDirectory/var/cache
+      rm -r $whichMagentoDirectory/var/cache
 
       printf "\n\n${COL_CYAN}(Step 6)${COL_NC} Reset ownership for contents of ${whichMagentoDirectory}.
       ${COL_MAGE}(Hint)${COL_NC} We're about to ask you for a password to do this.\n\n"
