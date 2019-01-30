@@ -1,4 +1,9 @@
 #!/bin/bash
+# Add some sort of help option
+# if [ ${#@} -ne 0 ] && [ "${@#"--help"}" = "" ]; then
+#   printf -- 'Some useful help message this is...\n';
+#   exit 0;
+# fi;
 
 main () {
   # Set the paths
@@ -20,38 +25,40 @@ main () {
 
 # D R Y
 upgrade_function () {
+  # Salutations, user!
   printf "\n\nYou selected ${COL_YELLOW}Magento 2 v2.${whichMenuOption}${COL_NC}. Shall we proceed with the update?\n"
   printf "Type ${COL_GREEN}Y${COL_NC} for ${COL_GREEN}Yes${COL_NC}, ${COL_RED}N${COL_NC} for ${COL_RED}No${COL_NC}. "
   read -n1 -p '> ' confirmation
   case $confirmation in
     y|Y)
+      # Create backups
       printf "\n\n${COL_CYAN}(Step 1)${COL_NC} Create backups of MySQL database and contents of ${whichMagentoDirectory}\n\n"
-      tar -cvzf ${whichMagento}-web-backup-$(date +%Y%m%d).tgz ${whichMagentoDirectory}
-      mysqldump --login-path=$whichMagento $whichMagento > $whichMagento-database-backup-$(date +%Y%m%d).sql
-
+      printf "\ttar -cvzf ${whichMagento}-web-backup-$(date +%Y%m%d).tgz ${whichMagentoDirectory}"
+      printf "\n\tmysqldump --login-path=${whichMagento} ${whichMagento} > ${whichMagento}-database-backup-$(date +%Y%m%d).sql"
+      # Set Ownership
       printf "\n\n${COL_CYAN}(Step 2)${COL_NC} Set appropriate ownership for contents of ${whichMagentoDirectory}\n"
       printf "${COL_MAGE}(Hint)${COL_NC} We're about to ask you for a password to do this.\n\n"
-      sudo chown -R $whoami:www-data $whichMagentoDirectory
-
-      printf "\n\n${COL_CYAN}(Step 3)${COL_NC} Instruct Composer to grab the latest changes to the branch ${whichComposerPackage}.\n\n"
-      usr/bin/php7.1 /usr/local/bin/composer require mailchimp/mc-magento2:$whichComposerPackage
-
+      printf "\tsudo chown -R ${whoami}:www-data ${whichMagentoDirectory}"
+      # Require latest from Composer package
+      printf "\n\n${COL_CYAN}(Step 3)${COL_NC} Instruct Composer to grab the latest changes to the dev-develop-2.1 branch.\n\n"
+      printf "\tusr/bin/php7.1 /usr/local/bin/composer require mailchimp/mc-magento2:${whichComposerPackage}"
+      # Apply new data and schema patches from update
       printf "\n\n${COL_CYAN}(Step 4)${COL_NC} Apply any new data and schema patches\n\n"
-      $whichPHP $whichMagentoDirectory/bin/magento setup:upgrade
-
+      printf "\t${whichPHP} ${whichMagentoDirectory}bin/magento setup:upgrade"
+      # Compile code
       printf "\n\n${COL_CYAN}(Step 5)${COL_NC} Run the code compiler\n\n"
-      $whichPHP $whichMagentoDirectory/bin/magento setup:di:compile
-
+      printf "\t${whichPHP} ${whichMagentoDirectory}bin/magento setup:di:compile"
+      # Flush cache
       printf "\n\n${COL_CYAN}(Step 6)${COL_NC} Flush the cache\n\n"
-      $whichPHP $whichMagentoDirectory/bin/magento cache:flush
-
+      printf "\t${whichPHP} ${whichMagentoDirectory}bin/magento cache:flush"
+      # Reset ownership
       printf "\n\n${COL_CYAN}(Step 7)${COL_NC} Reset ownership for contents of ${whichMagentoDirectory}\n"
       printf "${COL_MAGE}(Hint)${COL_NC} We're about to ask you for a password to do this.\n\n"
-      sudo chown -R www-data:www-data ${whichMagentoDirectory}
-
+      printf "\tsudo chown -R www-data:www-data ${whichMagentoDirectory}"
+      # Inform success!
       printf "\n\n${COL_GREEN}Success!${COL_NC} ${COL_YELLOW}Magento 2 v2.${whichMenuOption}${COL_NC} is now up to date."
       printf "\n"
-    ;;
+  ;;
     n|N) hello_function ;;
     *) printf "\n\nHmm, I'm sorry, I don't understand that option. Try again?\n"
        hello_function ;;
@@ -64,30 +71,32 @@ upgrade_function2 () {
   read -n1 -p '> ' confirmation
   case $confirmation in
     y|Y)
+      # Create backups
       printf "\n\n${COL_CYAN}(Step 1)${COL_NC} Create backups of MySQL database and contents of ${whichMagentoDirectory}.\n\n"
-      tar -cvzf $whichMagento-web-backup-$(date +%Y%m%d).tgz $whichMagentoDirectory
-      mysqldump --login-path=$whichMagento $whichMagento > $whichMagento-database-backup-$(date +%Y%m%d).sql
-
+      printf "\ttar -cvzf ${whichMagento}-web-backup-$(date +%Y%m%d).tgz ${whichMagentoDirectory}"
+      printf "\n\tmysqldump --login-path=${whichMagento} ${whichMagento} > ${whichMagento}-database-backup-$(date +%Y%m%d).sql"
+      # Set ownership & then change working directory
       printf "\n\n${COL_CYAN}(Step 2)${COL_NC} Set appropriate ownership for contents of ${whichMagentoDirectory}, then change our working directory.
       ${COL_MAGE}(Hint)${COL_NC} We're about to ask you for a password to do this.\n\n"
-      sudo chown -R $whoami:www-data $whichMagentoDirectory
-      cd $whichMagentoDirectory/mc-magento
-
+      # sudo chown -R $whoami:$whoami $whichMagentoDirectory
+      printf "\tsudo chown -R ${whoami}:www-data ${whichMagentoDirectory}\n"
+      printf "\tcd ${whichMagentoDirectory}mc-magento"
+      # Obtain the latest from Github repository
       printf "\n\n${COL_CYAN}(Step 3)${COL_NC} Instruct git to stash local changes, then grab latest changes from branch 'develop'.\n\n"
-      git stash --all\n
-      git fetch origin develop
-      git pull origin develop
-
+      printf "\tgit stash --all\n"             # stash any local changes
+      # printf "git fetch origin develop"    # fetch
+      printf "\tgit pull origin develop"     # pull
+      # Require latest from Composer package
       printf "\n\n${COL_CYAN}(Step 4)${COL_NC} Copy the contents of ${whichMagentoDirectory}mc-magento to ${whichMagentoDirectory}.\n\n"
-      rsync -avz . $whichMagentoDirectory
-
+      printf "\trsync -avz . ${whichMagentoDirectory}"
+      # Apply new data and schema patches from update
       printf "\n\n${COL_CYAN}(Step 5)${COL_NC} Flush the cache.\n\n"
-      m -r $whichMagentoDirectory/var/cache
-
+      printf "\trm -r ${whichMagentoDirectory}/var/cache"
+      # Reset ownership
       printf "\n\n${COL_CYAN}(Step 6)${COL_NC} Reset ownership for contents of ${whichMagentoDirectory}.
       ${COL_MAGE}(Hint)${COL_NC} We're about to ask you for a password to do this.\n\n"
-      sudo chown -R www-data:www-data $whichMagentoDirectory
-
+      printf "\tsudo chown -R www-data:www-data ${whichMagentoDirectory}"
+      # Inform success!
       printf "\n\n${COL_GREEN}Success!${COL_NC} ${COL_YELLOW}Magento 1 v1.${whichMenuOption}${COL_NC} is now up to date."
       printf "\n"
       ;;
