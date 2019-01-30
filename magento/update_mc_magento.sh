@@ -15,7 +15,13 @@ main () {
   COL_CYAN="\033[96m"
   COL_MAGE="\033[95m"
   COL_NC="\033[0m"
+  check_for_updates
   hello_function
+}
+
+check_for_updates () {
+  cd ~/scripts
+  git pull origin master
 }
 
 upgrade_function () {
@@ -70,12 +76,12 @@ upgrade_function2 () {
       sudo chown -R $whoami:www-data $whichMagentoDirectory
 
       printf "\n\n${COL_CYAN}(Step 2)${COL_NC} Create backups of MySQL database and contents of ${whichMagentoDirectory}.\n\n"
-      tar -cvzf $whichMagento-web-backup-$(date +%Y%m%d).tgz $whichMagentoDirectory
+      tar -czf $whichMagento-web-backup-$(date +%Y%m%d).tgz $whichMagentoDirectory
       mysqldump --login-path=$whichMagento $whichMagento > $whichMagento-database-backup-$(date +%Y%m%d).sql
       cd $whichMagentoDirectory/mc-magento
 
       printf "\n\n${COL_CYAN}(Step 3)${COL_NC} Instruct git to stash local changes, then grab latest changes from branch 'develop'.\n\n"
-      git stash --all\n
+      git stash --all
       git fetch origin develop
       git pull origin develop
 
