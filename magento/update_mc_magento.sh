@@ -2,10 +2,10 @@
 
 main () {
   # Set the paths
-  magento21='/var/www/magento221/'
-  magento22='/var/www/magento222/'
-  magento23='/var/www/magento223/'
-  magento1='/var/www/magento/'
+  magento21='/var/www/magento221'
+  magento22='/var/www/magento222'
+  magento23='/var/www/magento223'
+  magento1='/var/www/magento'
   whoami="$(whoami)"
   # The colors duke ... the colors!
   COL_GREEN="\033[32m"
@@ -32,11 +32,11 @@ upgrade_function () {
     y|Y)
       cd ~/backups
       printf "\n\n${COL_CYAN}(Step 1)${COL_NC} Set appropriate ownership for contents of ${whichMagentoDirectory}\n"
-      printf "${COL_MAGE}(Hint)${COL_NC} We're about to ask you for a password to do this.\n\n"
+      printf "${COL_MAGE}(Hint)${COL_NC} We're may ask you for a password to do this.\n\n"
       sudo chown -R $whoami:www-data $whichMagentoDirectory
 
       printf "\n\n${COL_CYAN}(Step 2)${COL_NC} Create backups of MySQL database and contents of ${whichMagentoDirectory}\n\n"
-      tar -cvzf ${whichMagento}-web-backup-$(date +%Y%m%d).tgz ${whichMagentoDirectory}
+      tar -czf ${whichMagento}-web-backup-$(date +%Y%m%d).tgz ${whichMagentoDirectory}
       mysqldump --login-path=$whichMagento $whichMagento > $whichMagento-database-backup-$(date +%Y%m%d).sql
 
       printf "\n\n${COL_CYAN}(Step 3)${COL_NC} Instruct Composer to grab the latest changes to the branch ${whichComposerPackage}.\n\n"
@@ -52,8 +52,8 @@ upgrade_function () {
       $whichPHP $whichMagentoDirectory/bin/magento cache:flush
 
       printf "\n\n${COL_CYAN}(Step 7)${COL_NC} Reset ownership for contents of ${whichMagentoDirectory}\n"
-      printf "${COL_MAGE}(Hint)${COL_NC} We're about to ask you for a password to do this.\n\n"
-      sudo chown -R www-data:www-data ${whichMagentoDirectory}
+      printf "${COL_MAGE}(Hint)${COL_NC} We're may to ask you for a password to do this.\n\n"
+      sudo chown -R www-data:www-data $whichMagentoDirectory
 
       printf "\n\n${COL_GREEN}Success!${COL_NC} ${COL_YELLOW}Magento 2 v2.${whichMenuOption}${COL_NC} is now up to date."
       printf "\n"
@@ -72,7 +72,7 @@ upgrade_function2 () {
     y|Y)
       cd ~/backups
       printf "\n\n${COL_CYAN}(Step 1)${COL_NC} Set appropriate ownership for contents of ${whichMagentoDirectory}\n"
-      printf "${COL_MAGE}(Hint)${COL_NC} We're about to ask you for a password to do this.\n\n"
+      printf "${COL_MAGE}(Hint)${COL_NC} We're may ask you for a password to do this.\n\n"
       sudo chown -R $whoami:www-data $whichMagentoDirectory
 
       printf "\n\n${COL_CYAN}(Step 2)${COL_NC} Create backups of MySQL database and contents of ${whichMagentoDirectory}.\n\n"
@@ -86,13 +86,13 @@ upgrade_function2 () {
       git pull origin develop
 
       printf "\n\n${COL_CYAN}(Step 4)${COL_NC} Copy the contents of ${whichMagentoDirectory}mc-magento to ${whichMagentoDirectory}.\n\n"
-      rsync -avz . $whichMagentoDirectory
+      rsync -avz $whichMagentoDirectory/mc-magento/* $whichMagentoDirectory
 
       printf "\n\n${COL_CYAN}(Step 5)${COL_NC} Flush the cache.\n\n"
       rm -r $whichMagentoDirectory/var/cache
 
       printf "\n\n${COL_CYAN}(Step 6)${COL_NC} Reset ownership for contents of ${whichMagentoDirectory}.
-      ${COL_MAGE}(Hint)${COL_NC} We're about to ask you for a password to do this.\n\n"
+      ${COL_MAGE}(Hint)${COL_NC} We're may ask you for a password to do this.\n\n"
       sudo chown -R www-data:www-data $whichMagentoDirectory
 
       printf "\n\n${COL_GREEN}Success!${COL_NC} ${COL_YELLOW}Magento 1 v1.${whichMenuOption}${COL_NC} is now up to date."
