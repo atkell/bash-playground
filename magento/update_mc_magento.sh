@@ -16,12 +16,20 @@ main () {
   COL_MAGE="\033[95m"
   COL_NC="\033[0m"
   check_for_updates
-  hello_function
+  # hello_function
 }
 
 check_for_updates () {
+  printf "Let's do a quick check to see if this update script is up-to-date."
   cd ~/scripts
-  git pull origin master
+  if [[ `git status --porcelain` ]]; then
+    printf "Looks like there were changes upstream. Let's try to apply those."
+    git pull origin master
+    exec ~/scripts/magento/update_mc_magento.sh
+  else
+    printf "Everything was up to date, yay!"
+    hello_function
+  fi
 }
 
 upgrade_function () {
