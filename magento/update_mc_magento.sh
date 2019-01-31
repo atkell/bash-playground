@@ -54,8 +54,9 @@ upgrade_function () {
       printf "\n\n${COL_CYAN}(Step 3)${COL_NC} Instruct Composer to grab the latest changes to the branch ${whichComposerPackage}.\n\n"
       # composerRequire="/usr/local/bin/composer require mailchimp/mc-magento2:$whichComposerPackage"
       # $whichPHP $composerRequire
-      echo $whichPHP
-      php7.1 /usr/local/bin/composer require mailchimp/mc-magento2:$whichComposerPackage
+      cd $whichMagentoDirectory
+      echo $(pwd)
+      $whichPHP /usr/local/bin/composer require mailchimp/mc-magento2:$whichComposerPackage
 
       printf "\n\n${COL_CYAN}(Step 4)${COL_NC} Apply any new data and schema patches\n\n"
       $whichPHP $whichMagentoDirectory/bin/magento setup:upgrade
