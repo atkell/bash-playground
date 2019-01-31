@@ -23,15 +23,17 @@ check_for_updates () {
   printf "Let's do a quick check to see if this update script is up-to-date.\n"
   cd ~/scripts
   git fetch -q origin
+  hello_function
 
-  if [[ $(git status --porcelain) ]]; then
-    printf "Looks like there were changes upstream. Let's try to apply those."
-    git pull -q origin master
-    exec ~/scripts/magento/update_mc_magento.sh
-  else
-    printf "${COL_GREEN}Everything was up to date, yay!${COL_NC}\n\n"
-    hello_function
-  fi
+  # 2019-01-31: not working correctly
+  # if [[ $(git status --porcelain) ]]; then
+  #   printf "Looks like there were changes upstream. Let's try to apply those."
+  #   git pull -q origin master
+  #   exec ~/scripts/magento/update_mc_magento.sh
+  # else
+  #   printf "${COL_GREEN}Everything was up to date, yay!${COL_NC}\n\n"
+  #   hello_function
+  # fi
 }
 
 upgrade_function () {
