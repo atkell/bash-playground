@@ -55,7 +55,6 @@ upgrade_function () {
       # composerRequire="/usr/local/bin/composer require mailchimp/mc-magento2:$whichComposerPackage"
       # $whichPHP $composerRequire
       cd $whichMagentoDirectory
-      echo $(pwd)
       $whichPHP /usr/local/bin/composer require mailchimp/mc-magento2:$whichComposerPackage
 
       printf "\n\n${COL_CYAN}(Step 4)${COL_NC} Apply any new data and schema patches\n\n"
