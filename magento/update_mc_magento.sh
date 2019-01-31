@@ -52,7 +52,8 @@ upgrade_function () {
       mysqldump --login-path=$whichMagento $whichMagento > $whichMagento-database-backup-$(date +%Y%m%d).sql
 
       printf "\n\n${COL_CYAN}(Step 3)${COL_NC} Instruct Composer to grab the latest changes to the branch ${whichComposerPackage}.\n\n"
-      $whichPHP /usr/local/bin/composer require mailchimp/mc-magento2:$whichComposerPackage
+      composerRequire="/usr/local/bin/composer require mailchimp/mc-magento2:$whichComposerPackage"
+      $whichPHP $composerRequire
 
       printf "\n\n${COL_CYAN}(Step 4)${COL_NC} Apply any new data and schema patches\n\n"
       $whichPHP $whichMagentoDirectory/bin/magento setup:upgrade
