@@ -38,7 +38,8 @@ magento1 () {
     magento1='/var/www/magento'
     cd $magento1
     git_output="$(sudo git log -1 | grep 'commit')" # ownership conflict without sudo
-    echo "Magento 1.0:" $git_output
+    git_output_commit=${git_output:7}
+    echo "Magento 1.9:" $git_output_commit
 }
 
 get_commits() {
