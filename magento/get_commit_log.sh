@@ -34,18 +34,19 @@ magento23 () {
     echo "Magento 2.1:" $composer_output_commit
 }
 
-# magento1 () {
-#     cd $magento1
-#     git_output="$(sudo git log -1 | grep 'commit')" # ownership conflict without sudo
-#     return git_output
-# }
+magento1 () {
+    magento1='/var/www/magento'
+    cd $magento1
+    git_output="$(sudo git log -1 | grep 'commit')" # ownership conflict without sudo
+    return git_output
+}
 
 get_commits() {
-    printf "Hello! *waves* \nHere are the latest commits I've found...\n"
+    printf "Hello! *waves* \nHere are the latest commits I've found...\n\n"
     magento21
     magento22
     magento23
-    # magento1
+    magento1
 }
 
 get_commits
