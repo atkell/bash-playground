@@ -11,6 +11,7 @@ locations () {
 }
 
 magento21 () {
+    magento21='/var/www/magento221'
     cd $magento21
     composer_output="$(composer show mailchimp/mc-magento2 | grep 'source')"
     composer_output_commit=${composer_output:61}
@@ -18,6 +19,7 @@ magento21 () {
 }
 
 magento22 () {
+    magento22='/var/www/magento222'
     cd $magento22
     composer_output="$(composer show mailchimp/mc-magento2 | grep 'source')"
     composer_output_commit=${composer_output:61}
@@ -25,6 +27,7 @@ magento22 () {
 }
 
 magento23 () {
+    magento23='/var/www/magento223'
     cd $magento23
     composer_output="$(composer show mailchimp/mc-magento2 | grep 'source')"
     composer_output_commit=${composer_output:61}
