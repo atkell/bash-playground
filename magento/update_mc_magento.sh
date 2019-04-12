@@ -157,11 +157,6 @@ choice_function () {
       printf "\n\nWonderful, now please do tell me the pre-release version you'll be testing (1.1.16, e.g.): \n"
       read -p '> ' whichPreReleaseVersion
       upgrade_function2 $whichMagento $whichMagentoDirectory $whichPreReleaseVersion
-      # printf "You said ${COL_YELLOW}${whichMagentoVersion}${COL_NC}. Is that correct? Type ${COL_GREEN}Y${COL_NC} for ${COL_GREEN}Yes${COL_NC}, ${COL_RED}N${COL_NC} for ${COL_RED}No${COL_NC}.\t"
-      # read -n1 -p '> ' confirmation
-      # case $confirmation in
-      #   y|Y) printf "Call upgrade_function2" ;;
-      # esac
   esac
 }
 
