@@ -96,12 +96,10 @@ upgrade_function2 () {
       # cd $whichMagentoDirectory/mc-magento
       cd /home/$whoami/mc-magento
 
-      printf "\n\n${COL_CYAN}(Step 3)${COL_NC} Instruct git to stash local changes, then grab latest pre-release changes from branch 'origin/pre-release/${whichMagentoVersion}'.\n\n"
-      git stash --all
-      git fetch origin
-      git pull origin/pre-release/$whichPreReleaseVersion
+      printf "\n\n${COL_CYAN}(Step 3)${COL_NC} Instruct git to stash local changes, then grab latest pre-release changes from branch 'origin/pre-release/${whichPreReleaseVersion}'.\n\n"
+      git stash --all && git fetch --all && git checkout pre-release/$whichPreReleaseVersion
 
-      printf "\n\n${COL_CYAN}(Step 4)${COL_NC} Copy the contents of ${whichMagentoDirectory}mc-magento to ${whichMagentoDirectory}.\n\n"
+      printf "\n\n${COL_CYAN}(Step 4)${COL_NC} Copy the contents of /home/$whoami/mc-magento/* to ${whichMagentoDirectory}.\n\n"
       rsync -avz /home/$whoami/mc-magento/* $whichMagentoDirectory
 
       printf "\n\n${COL_CYAN}(Step 5)${COL_NC} Flush the cache.\n\n"
@@ -111,7 +109,8 @@ upgrade_function2 () {
       ${COL_MAGE}(Hint)${COL_NC} We're may ask you for a password to do this.\n\n"
       sudo chown -R www-data:www-data $whichMagentoDirectory
 
-      printf "\n\n${COL_GREEN}Success!${COL_NC} ${COL_YELLOW}Magento 1 v1.${whichMenuOption}${COL_NC} is now up to date."
+      printf "\n\n${COL_GREEN}Success!${COL_NC} ${COL_YELLOW}Magento 1 v1.${whichMenuOption}${COL_NC} is now up to date. Here's the latest commit I've found: \n"
+      git log -1 | grep 'commit'
       printf "\n"
       ;;
     n|N) hello_function ;;
@@ -152,7 +151,7 @@ choice_function () {
       upgrade_function $whichMenuOption $whichPHP $whichMagento $whichMagentoDirectory $whichComposerPackage
     ;;
     9)
-      whichMagento="magento1"
+      whichMagento="magento_stage"
       whichMagentoDirectory=$magento1
       printf "\n\nWonderful, now please do tell me the pre-release version you'll be testing (1.1.16, e.g.): \n"
       read -p '> ' whichPreReleaseVersion
