@@ -15,26 +15,26 @@ main () {
   COL_CYAN="\033[96m"
   COL_MAGE="\033[95m"
   COL_NC="\033[0m"
-  check_for_updates
-  # hello_function
-}
-
-check_for_updates () {
-  printf "Let's do a quick check to see if this update script is up-to-date.\n"
-  cd ~/scripts
-  git fetch -q origin
+  # check_for_updates
   hello_function
-
-  # 2019-01-31: not working correctly
-  # if [[ $(git status --porcelain) ]]; then
-  #   printf "Looks like there were changes upstream. Let's try to apply those."
-  #   git pull -q origin master
-  #   exec ~/scripts/magento/update_mc_magento.sh
-  # else
-  #   printf "${COL_GREEN}Everything was up to date, yay!${COL_NC}\n\n"
-  #   hello_function
-  # fi
 }
+
+# check_for_updates () {
+#   printf "Let's do a quick check to see if this update script is up-to-date.\n"
+#   cd ~/scripts
+#   git fetch -q origin
+#   hello_function
+
+#   # 2019-01-31: not working correctly
+#   # if [[ $(git status --porcelain) ]]; then
+#   #   printf "Looks like there were changes upstream. Let's try to apply those."
+#   #   git pull -q origin master
+#   #   exec ~/scripts/magento/update_mc_magento.sh
+#   # else
+#   #   printf "${COL_GREEN}Everything was up to date, yay!${COL_NC}\n\n"
+#   #   hello_function
+#   # fi
+# }
 
 upgrade_function () {
   printf "\n\nYou selected ${COL_YELLOW}Magento 2 v2.${whichMenuOption}${COL_NC}. Shall we proceed with the update?\n"
@@ -80,7 +80,7 @@ upgrade_function () {
 }
 
 upgrade_function2 () {
-  printf "\n\nYou selected ${COL_YELLOW}Magento 1 v1.${whichMenuOption}${COL_NC}. If this isn't correct, use CTRL + C to Cancel.\n\n"
+  printf "\n\nYou selected the ${COL_YELLOW}pre-release version $whichPreReleaseVersion for Magento 1 v1.${whichMenuOption}${COL_NC}. If this isn't correct, use CTRL + C to Cancel.\n\n"
   printf "Shall we proceed with update? Type ${COL_GREEN}Y${COL_NC} for ${COL_GREEN}Yes${COL_NC}, ${COL_RED}N${COL_NC} for ${COL_RED}No${COL_NC}.\t"
   read -n1 -p '> ' confirmation
   case $confirmation in
@@ -93,15 +93,16 @@ upgrade_function2 () {
       printf "\n\n${COL_CYAN}(Step 2)${COL_NC} Create backups of MySQL database and contents of ${whichMagentoDirectory}.\n\n"
       tar -czf $whichMagento-web-backup-$(date +%Y%m%d).tgz $whichMagentoDirectory
       mysqldump --login-path=$whichMagento $whichMagento > $whichMagento-database-backup-$(date +%Y%m%d).sql
-      cd $whichMagentoDirectory/mc-magento
+      # cd $whichMagentoDirectory/mc-magento
+      cd /home/$whoami/mc-magento
 
-      printf "\n\n${COL_CYAN}(Step 3)${COL_NC} Instruct git to stash local changes, then grab latest changes from branch 'develop'.\n\n"
+      printf "\n\n${COL_CYAN}(Step 3)${COL_NC} Instruct git to stash local changes, then grab latest pre-release changes from branch 'origin/pre-release/${whichMagentoVersion}'.\n\n"
       git stash --all
-      git fetch origin develop
-      git pull origin develop
+      git fetch origin
+      git pull origin/pre-release/$whichPreReleaseVersion
 
       printf "\n\n${COL_CYAN}(Step 4)${COL_NC} Copy the contents of ${whichMagentoDirectory}mc-magento to ${whichMagentoDirectory}.\n\n"
-      rsync -avz $whichMagentoDirectory/mc-magento/* $whichMagentoDirectory
+      rsync -avz /home/$whoami/mc-magento/* $whichMagentoDirectory
 
       printf "\n\n${COL_CYAN}(Step 5)${COL_NC} Flush the cache.\n\n"
       rm -r $whichMagentoDirectory/var/cache
@@ -153,11 +154,14 @@ choice_function () {
     9)
       whichMagento="magento1"
       whichMagentoDirectory=$magento1
-      # whichComposerPackage="dev-develop-2.3"
-      # upgrade_function $whichMenuOption $whichPHP $whichMagento $whichMagentoDirectory $whichComposerPackage
-      upgrade_function2 $whichMagento $whichMagentoDirectory
-    ;;
-    *) hello_function ;;
+      printf "\n\nWonderful, now please do tell me the pre-release version you'll be testing (1.1.16, e.g.): \n"
+      read -p '> ' whichPreReleaseVersion
+      upgrade_function2 $whichMagento $whichMagentoDirectory $whichPreReleaseVersion
+      # printf "You said ${COL_YELLOW}${whichMagentoVersion}${COL_NC}. Is that correct? Type ${COL_GREEN}Y${COL_NC} for ${COL_GREEN}Yes${COL_NC}, ${COL_RED}N${COL_NC} for ${COL_RED}No${COL_NC}.\t"
+      # read -n1 -p '> ' confirmation
+      # case $confirmation in
+      #   y|Y) printf "Call upgrade_function2" ;;
+      # esac
   esac
 }
 
