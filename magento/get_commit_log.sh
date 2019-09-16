@@ -23,7 +23,7 @@ magento22 () {
     cd $magento22
     composer_output="$(composer show mailchimp/mc-magento2 | grep 'source')"
     composer_output_commit=${composer_output:61}
-    echo "Magento 2.1:" $composer_output_commit
+    echo "Magento 2.2:" $composer_output_commit
 }
 
 magento23 () {
@@ -31,7 +31,7 @@ magento23 () {
     cd $magento23
     composer_output="$(composer show mailchimp/mc-magento2 | grep 'source')"
     composer_output_commit=${composer_output:61}
-    echo "Magento 2.1:" $composer_output_commit
+    echo "Magento 2.3:" $composer_output_commit
 }
 
 magento1 () {
