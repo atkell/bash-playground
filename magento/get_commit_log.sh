@@ -7,6 +7,7 @@ locations () {
     magento21='/var/www/magento221'
     magento22='/var/www/magento222'
     magento23='/var/www/magento223'
+    magento24='/var/www/magento224'
     magento1='/var/www/magento'
 }
 
@@ -32,6 +33,14 @@ magento23 () {
     composer_output="$(composer show mailchimp/mc-magento2 | grep 'source')"
     composer_output_commit=${composer_output:61}
     echo "Magento 2.3:" $composer_output_commit
+}
+
+magento24 () {
+    magento24='/var/www/magento224'
+    cd $magento23
+    composer_output="$(composer show mailchimp/mc-magento2 | grep 'source')"
+    composer_output_commit=${composer_output:61}
+    echo "Magento 2.4:" $composer_output_commit
 }
 
 magento1 () {
