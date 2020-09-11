@@ -48,8 +48,13 @@ upgrade_function () {
       printf "${COL_MAGE}(Hint)${COL_NC} We're may ask you for a password to do this.\n\n"
       sudo chown -R $whoami:www-data $whichMagentoDirectory
 
+      # Remove the contents of the var directory before we backup
+      rm -R $whichMagentoDirectory/var/session/*
+      rm -R $whichMagentoDirectory/var/reports/*
+      rm -R $whichMagentoDirectory/var/cache/*    
+
       printf "\n\n${COL_CYAN}(Step 2)${COL_NC} Create backups of MySQL database and contents of ${whichMagentoDirectory}\n\n"
-      tar -czf $whichMagento-web-backup-$(date +%Y%m%d).tgz $whichMagentoDirectory
+      tar -czvf $whichMagento-web-backup-$(date +%Y%m%d).tgz $whichMagentoDirectory
       mysqldump --login-path=$whichMagento $whichMagento > $whichMagento-database-backup-$(date +%Y%m%d).sql
 
       printf "\n\n${COL_CYAN}(Step 3)${COL_NC} Instruct Composer to grab the latest changes to the branch ${whichComposerPackage}.\n\n"
