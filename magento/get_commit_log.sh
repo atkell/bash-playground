@@ -57,6 +57,7 @@ get_commits() {
     magento21
     magento22
     magento23
+    magento24
 }
 
 get_commits
