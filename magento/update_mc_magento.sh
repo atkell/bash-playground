@@ -5,6 +5,7 @@ main () {
   magento21='/var/www/magento221'
   magento22='/var/www/magento222'
   magento23='/var/www/magento223'
+  magento24='/var/www/magento224'
   magento1='/var/www/magento'
   whoami="$(whoami)"
   # The colors duke ... the colors!
@@ -97,7 +98,7 @@ upgrade_function2 () {
       cd /home/$whoami/mc-magento
 
       printf "\n\n${COL_CYAN}(Step 3)${COL_NC} Instruct git to stash local changes, then grab latest pre-release changes from branch 'origin/pre-release/${whichPreReleaseVersion}'.\n\n"
-      git stash --all && git fetch --all && git checkout pre-release/$whichPreReleaseVersion
+      git stash --all && git fetch --all && git checkout pre-release/$whichPreReleaseVersion && git pull pre-release/$whichPreReleaseVersion
 
       printf "\n\n${COL_CYAN}(Step 4)${COL_NC} Copy the contents of /home/$whoami/mc-magento/* to ${whichMagentoDirectory}.\n\n"
       rsync -avz /home/$whoami/mc-magento/* $whichMagentoDirectory
@@ -125,6 +126,7 @@ choice_function () {
     ${COL_YELLOW}(1)${COL_NC} Magento 2 v2.1
     ${COL_YELLOW}(2)${COL_NC} Magento 2 v2.2
     ${COL_YELLOW}(3)${COL_NC} Magento 2 v2.3
+    ${COL_YELLOW}(4)${COL_NC} Magento 2 v2.4
     ${COL_YELLOW}(9)${COL_NC} Magento 1 v1.9
   \n"
   read -n1 -p '> ' whichMenuOption
@@ -144,10 +146,17 @@ choice_function () {
       upgrade_function $whichMenuOption $whichPHP $whichMagento $whichMagentoDirectory $whichComposerPackage
     ;;
     3)
-      whichPHP="php"
+      whichPHP="php7.3"
       whichMagento="magento223"
       whichMagentoDirectory=$magento23
       whichComposerPackage="dev-develop-2.3"
+      upgrade_function $whichMenuOption $whichPHP $whichMagento $whichMagentoDirectory $whichComposerPackage
+    ;;    
+    4)
+      whichPHP="php"
+      whichMagento="magento224"
+      whichMagentoDirectory=$magento24
+      whichComposerPackage="dev-develop-2.4"
       upgrade_function $whichMenuOption $whichPHP $whichMagento $whichMagentoDirectory $whichComposerPackage
     ;;
     9)
@@ -162,7 +171,7 @@ choice_function () {
 hello_function () {
   printf "\nWelcome to the ${COL_GREEN}experimental${COL_NC} upgrade system for the ${COL_YELLOW}Mailchimp for Magento${COL_NC} module!\n"
   printf "Please note that ${COL_BLUE}we'll ask you for a password${COL_NC} during this process.\n"
-  printf "${COL_MAGE}(Hint)${COL_NC} We keep that one in ${COL_RED}LastPass${COL_NC}. \n\n"
+  # printf "${COL_MAGE}(Hint)${COL_NC} We keep that one in ${COL_RED}LastPass${COL_NC}. \n\n"
   choice_function
 }
 
